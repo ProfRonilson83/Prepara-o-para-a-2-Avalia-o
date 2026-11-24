@@ -1,0 +1,31 @@
+# Quiz UniESBAM – versão GitHub Pages + Firebase
+
+Projeto estático com **20 questões**, correção com **comentário para cada alternativa**, painel do professor ao vivo e exportação CSV para Excel.
+
+## Publicação online
+
+1. Crie um projeto em https://console.firebase.google.com/ e cadastre um **aplicativo Web** (ícone `</>`). Copie `apiKey`, `authDomain`, `projectId` e `appId` para `config.js`.
+2. Em **Authentication > Sign-in method**, ative **Anonymous** (para os alunos) e **Email/Password** (para o professor). Crie a conta do professor em Authentication > Users e anote o **UID**.
+3. Em **Firestore Database**, crie o banco. Cole o conteúdo de `firestore.rules` na aba **Rules**, substitua `SUBSTITUA_PELO_UID_DO_PROFESSOR` pelo UID do professor e **publique** as regras.
+4. Preencha `professorEmail` e `professorUid` em `config.js`. O UID precisa ser exatamente o mesmo usado nas regras do Firestore.
+5. Em **Authentication > Settings > Authorized domains**, inclua `SEU-USUARIO.github.io` (domínio real do seu GitHub Pages).
+6. Envie **todos os arquivos** para a raiz de um repositório do GitHub e ative **Settings > Pages > Deploy from a branch > main / (root)**. Acesse `https://SEU-USUARIO.github.io/NOME-DO-REPOSITORIO/`.
+7. Entre como professor, abra o quiz e acompanhe os alunos. Para testar, abra a URL em dois navegadores/dispositivos diferentes.
+
+**IMPORTANTE:** GitHub Pages só hospeda os arquivos; para sincronização em tempo real entre dispositivos é necessário Firebase configurado. Se `config.js` estiver vazio, o quiz executa apenas uma demonstração local **sem sincronização**. A nota exibida no painel durante a prova é a nota parcial com base nas respostas já marcadas; após finalizar, é a nota final. A presença online significa atividade nos últimos 60 segundos e não comprova presença física ou conexão contínua.
+
+## Segurança e privacidade
+
+- Não coloque senha, token administrativo nem chave privada no repositório; `apiKey` do aplicativo Firebase Web é uma configuração pública.
+- As regras do Firestore restringem a leitura global das tentativas ao UID do professor. Alunos só podem consultar e escrever a própria tentativa.
+- Use dados acadêmicos apenas conforme as regras de privacidade da instituição. Oriente os alunos sobre identificação, armazenamento e acesso às notas.
+- O frontend calcula a nota; **não é um sistema antifraude** e alunos com conhecimento técnico podem modificar o próprio navegador. Para uma avaliação oficial e resistente a manipulação, é necessária correção no servidor (Cloud Functions ou backend próprio), regras adicionais e autenticação institucional.
+- No modo demonstração, o login `professor@demo.local / demo123` não é uma proteção real, apenas facilita testes locais.
+- Ao iniciar uma nova sessão pelo painel, o sistema apaga as tentativas existentes. Exporte primeiro as notas.
+
+## Estrutura
+
+- `index.html` — quiz, correção detalhada, painel ao vivo e exportação Excel/CSV.
+- `config.js` — configuração pública do Firebase e identificação do professor.
+- `firestore.rules` — permissões do banco (publicar manualmente no console Firebase).
+- `README.md` — instruções de implantação.
